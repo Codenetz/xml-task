@@ -1,4 +1,4 @@
-###Google authentication
+### Google authentication
 
 Create service account for your project in Google Cloud Console. 
 
@@ -9,12 +9,12 @@ Example:
 $ cp var/dist.googleServiceAccount.json var/googleServiceAccount.json
 ```
 
-###Build docker image
+### Build docker image
 ```
 $ ./setup
 ```
 
-###Run task
+### Run task
 ```
 $ ./run data/coffee_feed.xml
 ```
