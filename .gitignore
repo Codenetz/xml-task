@@ -1,0 +1,5 @@
+vendor
+.idea
+.git
+var/googleServiceAccount.json
+var/dockercid

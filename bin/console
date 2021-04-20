@@ -1,0 +1,15 @@
+#!/usr/bin/env php
+
+<?php
+require __DIR__.'/../vendor/autoload.php';
+
+define('APP_DIR', __DIR__.'/..');
+
+use Symfony\Component\Console\Application;
+use App\Import\Command\ImportCommand;
+
+$log = new \App\Log\Log();
+
+$application = new Application();
+$application->add(new ImportCommand($log));
+$application->run();
