@@ -2,7 +2,8 @@
     "require": {
         "symfony/console": "^5.2",
         "google/apiclient": "^2.0",
-        "symfony/monolog-bundle": "^3.7"
+        "symfony/monolog-bundle": "^3.7",
+        "phpunit/phpunit": "^8.5"
     },
     "autoload": {
         "psr-4": {

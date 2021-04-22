@@ -3,3 +3,4 @@ vendor
 .git
 var/googleServiceAccount.json
 var/dockercid
+var/dockercid-test

@@ -2,3 +2,4 @@ vendor
 .idea
 .git
 var/dockercid
+var/dockercid-test

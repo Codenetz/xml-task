@@ -8,18 +8,19 @@ use App\Import\Lib\GoogleDrive;
 use App\Import\Lib\GoogleSpreadsheet;
 use App\Import\Lib\XMLFile;
 use App\Import\Lib\XMLFileNormalization;
-use App\Log\Lib\Error;
 use App\Log\Log;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Class ImportCommand
  * @package App\Import\Command
  */
-class ImportCommand extends Command {
+class ImportCommand extends Command
+{
 
   /**
    * @var string
@@ -41,7 +42,8 @@ class ImportCommand extends Command {
   {
     $this
       ->setDescription('Importing XML to Google spreadsheet')
-      ->addArgument('fileLocation', InputArgument::REQUIRED, 'XML file location');
+      ->addArgument('fileLocation', InputArgument::REQUIRED, 'XML file location')
+      ->addOption('deleteSpreadsheet', null, InputOption::VALUE_OPTIONAL, 'Deletes spreadsheet from Google Drive after import', false);
   }
 
   /**
@@ -52,8 +54,12 @@ class ImportCommand extends Command {
    */
   protected function execute(InputInterface $input, OutputInterface $output)
   {
+    $this->log->pushConsoleHandler($output);
+
     try {
       $fileLocation = $input->getArgument('fileLocation');
+      $deleteSpreadsheet = $input->getOption('deleteSpreadsheet');
+      if (!is_bool($deleteSpreadsheet)) $deleteSpreadsheet = ($deleteSpreadsheet === 'true');
 
       $this->log->info("Begin importing");
       $xmlFile = new XMLFile($fileLocation);
@@ -65,13 +71,15 @@ class ImportCommand extends Command {
 
       $googleClient = new GoogleClient();
       $googleDrive = new GoogleDrive($googleClient);
-      $googleSpreadSheet = new GoogleSpreadsheet($xmlFileNormalization, $googleDrive, $googleClient);
+      $googleSpreadSheet = new GoogleSpreadsheet($xmlFileNormalization, $googleClient);
       $spreedSheet = $googleSpreadSheet->import();
+      $googleDrive->givePublicPermission($spreedSheet->getSpreadsheetId());
 
       $this->log->info("Public spreadsheet url:");
       $this->log->info($spreedSheet->getSpreadsheetUrl());
-    }
-    catch (\Exception $e) {
+
+      if ($deleteSpreadsheet) $googleDrive->deleteFile($spreedSheet->getSpreadsheetId());
+    } catch (\Exception $e) {
       $this->log->error($e);
     }
 

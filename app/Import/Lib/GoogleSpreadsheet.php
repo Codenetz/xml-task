@@ -15,10 +15,7 @@ class GoogleSpreadsheet
    * @var FileInterface
    */
   protected FileInterface $file;
-  /**
-   * @var GoogleDrive
-   */
-  protected GoogleDrive $googleDrive;
+
   /**
    * @var GoogleClientInterface
    */
@@ -27,13 +24,11 @@ class GoogleSpreadsheet
   /**
    * GoogleSpreadsheet constructor.
    * @param FileInterface $file
-   * @param GoogleDrive $googleDrive
    * @param GoogleClientInterface $googleClient
    */
-  public function __construct(FileInterface $file, GoogleDrive $googleDrive, GoogleClientInterface $googleClient)
+  public function __construct(FileInterface $file, GoogleClientInterface $googleClient)
   {
     $this->file = $file;
-    $this->googleDrive = $googleDrive;
     $this->googleClient = $googleClient;
   }
 
@@ -106,7 +101,6 @@ class GoogleSpreadsheet
     $spreedSheetService = $this->getSpreadsheet();
     $spreedSheet = $this->createSpreedSheet($spreedSheetService);
     $this->write($spreedSheetService, $spreedSheet, $contents);
-    $this->googleDrive->givePublicPermission($spreedSheet->getSpreadsheetId());
     return $spreedSheetService->spreadsheets->get($spreedSheet->getSpreadsheetId());
   }
 

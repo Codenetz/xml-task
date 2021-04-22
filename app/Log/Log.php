@@ -4,6 +4,7 @@ namespace App\Log;
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 use Monolog\ErrorHandler;
+use Symfony\Bridge\Monolog\Handler\ConsoleHandler;
 
 /**
  * Class Log
@@ -18,15 +19,24 @@ class Log
 
   /**
    * Log constructor.
+   * @param bool $stdOut
    */
-  public function __construct()
+  public function __construct(bool $stdOut = true)
   {
     ini_set('display_errors', 0);
 
     $log = new Logger('task');
-    $log->pushHandler(new StreamHandler('php://stdout', Logger::DEBUG));
+    if($stdOut) $log->pushHandler(new StreamHandler('php://stdout', Logger::DEBUG));
     ErrorHandler::register($log);
     $this->log = $log;
+  }
+
+  /**
+   * @param $output
+   */
+  public function pushConsoleHandler($output)
+  {
+    $this->log->pushHandler(new ConsoleHandler($output));
   }
 
   /**

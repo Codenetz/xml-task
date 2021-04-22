@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Import\Interfaces;
 
 interface FileInterface {

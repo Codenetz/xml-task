@@ -43,4 +43,13 @@ class GoogleDrive
     $permissionService->type = "anyone";
     $googleDrive->permissions->create($fileId, $permissionService);
   }
+
+  /**
+   * @param $fileId
+   */
+  public function deleteFile($fileId)
+  {
+    $f = new \Google_Service_Drive($this->googleClient->getConnection());
+    $f->files->delete($fileId);
+  }
 }

@@ -1,9 +1,11 @@
 #!/bin/bash
 
 taskName="task"
+taskTestName="task-test"
 currentPath=$(
   cd "$(dirname "${BASH_SOURCE[0]}")"
   pwd -P
 )
 
-docker build -t "$taskName" "$currentPath"
+docker build -t "$taskName" --target cmd "$currentPath"
+docker build -t "$taskTestName" --target test "$currentPath"

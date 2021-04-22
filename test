@@ -1,0 +1,16 @@
+#!/bin/bash
+
+currentPath=$(
+  cd "$(dirname "${BASH_SOURCE[0]}")"
+  pwd -P
+)
+
+taskName="task-test"
+cidFile="$currentPath/var/dockercid-test"
+
+[ -e "$cidFile" ] && rm "$cidFile"
+docker run -it --cidfile "$cidFile" "$taskName" "$@"
+cid=$(<"$cidFile")
+echo ""
+echo "Container ID: "$cid
+echo "Log location: /var/lib/docker/containers/$cid/$cid-json.log"
